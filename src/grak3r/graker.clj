@@ -19,7 +19,16 @@
 (extend-protocol Rule
   clojure.lang.IPersistentVector
   (grake [self env]
-    (str/join " " (map #(grake % env) self)))
+    (let [[fg & rg] (map #(grake % env) self)
+          sb (StringBuilder.)]
+      (when-not (empty? fg)
+        (.append sb fg))
+      (doseq [g rg]
+        (when-not (or (empty? g)
+                      (re-matches #"^\p{P}" g))
+          (.append sb " "))
+        (.append sb g))
+      (.toString sb)))
   java.lang.String
   (grake [self _] self)
   clojure.lang.Keyword
