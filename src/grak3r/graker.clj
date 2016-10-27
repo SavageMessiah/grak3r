@@ -27,9 +27,11 @@
     (handle-with-module env self))
   clojure.lang.IPersistentSet
   (grake [self env]
-    (let [choice-vec (vec self)
-          choice (get choice-vec (rand-int env (count choice-vec)))]
-      (grake choice env)))
+    (if (empty? self)
+      ""
+      (let [choice-vec (vec self)
+            choice (get choice-vec (rand-int env (count choice-vec)))]
+        (grake choice env))))
   clojure.lang.IPersistentMap
   (grake [self env]
     (handle-with-module env self))
