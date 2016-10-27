@@ -13,7 +13,7 @@
               (get tagged tag))))
 
 (defn find-words [words {:keys [matches begins-with ends-with]}]
-  (if-not (and matches begins-with ends-with)
+  (if-not (or matches begins-with ends-with)
     words
     (into #{} (for [word words
                     :when (and (or (not matches)
