@@ -16,11 +16,14 @@
 (defrecord NLG [^Lexicon lexicon ^NLGFactory factory ^Realiser realiser]
   grake/Module
   (handle-grake [self env {:keys [type subject verb object
-                                  tense progressive interrogative]}]
+                                  tense progressive interrogative
+                                  phrase-only]}]
     (when (= type :nlg)
       (let [spec (.createClause factory)]
-        (.setSubject spec (fix_ (grake/grake subject env)))
-        (.setObject spec (fix_ (grake/grake object env)))
+        (when subject
+          (.setSubject spec (fix_ (grake/grake subject env))))
+        (when object
+          (.setObject spec (fix_ (grake/grake object env))))
         (.setVerb spec (fix_ (grake/grake verb env)))
         (.setFeature spec Feature/PROGRESSIVE (boolean progressive))
         (when interrogative
