@@ -2,6 +2,7 @@
   (:require [clojure.pprint :as pprint]
             [clojure.string :as str]
             [grak3r.graker :as graker]
+            [grak3r.scrape :as scrape]
             [grak3r.words :as words]
             [grak3r.rules :as rules])
   (:import [java.util Random]))
@@ -51,7 +52,8 @@
 (defn new-graker
   ([] (new-graker (System/currentTimeMillis)))
   ([seed]
-   {:modules [(words/make-words)
+   {:modules [(scrape/make-scraper)
+              (words/make-words)
               (rules/make-rules default-rules)]
     :builtins default-builtins
     :seed seed
