@@ -6,6 +6,10 @@
             [grak3r.rules :as rules])
   (:import [java.util Random]))
 
+(defn lift-fun [fun]
+  (fn [env args]
+    (apply fun (map #(graker/grake % env) args))))
+
 (def default-builtins
   {'+ (fn [env args]
         (apply str (map #(graker/grake % env) args)))
@@ -13,11 +17,17 @@
         (if (= 0 (graker/rand-int env 2))
           ""
           (graker/grake (first args) env)))
-   'cap (fn [env args]
-          (let [g (graker/grake (first args) env)]
-            (str/capitalize g)))})
+   'cap (lift-fun str/capitalize)
+   'case/title (lift-fun str/capitalize)
+   'case/up (lift-fun str/upper-case)
+   'case/down (lift-fun str/lower-case)})
 
-(def default-rules '{:bal-sagoth-team-name ["Team" #{["ScoutPrime"
+(def default-rules '{:cool-story ["Cool" 
+                                  (+ "br" {:type :word :tagged #{"adjective"} :begins-with "o"}) 
+                                  (+ "br" {:type :word :tagged #{"noun"} :begins-with "o"} ",") 
+                                  "Bro!"]
+                     :insult/your-face ["Your face is like a" :word/adjective "butt that poops" (+ :word/noun "s") :word/adverb]
+                     :bal-sagoth-team-name ["Team" #{["ScoutPrime"
                                                       (cap (+ :word/verb "ing"))
                                                       "Upon The"
                                                       (cap :word/noun)
