@@ -3,7 +3,8 @@
             [clojure.set :as set]
             [clojure.string :as str]
             [cheshire.core :as cheshire]
-            [grak3r.graker :as grake]))
+            [grak3r.graker :as grake])
+  (:import [com.google.common.cache CacheBuilder CacheLoader]))
 
 (defn my-keyword? [k tagged]
   (and (= "word" (namespace k))
@@ -24,7 +25,7 @@
                                    (str/ends-with? word ends-with)))]
                 word))))
 
-(defrecord Words [all tagged]
+(defrecord Words [all tagged cache]
   grake/Module
   (handle-grake [self env rule]
     (cond (and (keyword? rule)
@@ -32,10 +33,7 @@
           (grake/handle-grake self env {:type :word :tagged #{(name rule)}})
           (and (map? rule)
                (= (:type rule) :word))
-          (find-words (if-let [tags (:tagged rule)]
-                        (tagged-words tagged tags)
-                        all)
-                      rule)
+          (.get cache rule)
           :else
           nil)))
 
@@ -47,6 +45,16 @@
       (update :all conj (first word-vec))
       (update :tagged tag-word (first word-vec) (rest word-vec))))
 
+(defn make-cache [{:keys [all tagged]}]
+  (-> (CacheBuilder/newBuilder)
+      (.maximumSize 100)
+      (.build (proxy [CacheLoader] []
+                (load [rule]
+                  (find-words (if-let [tags (:tagged rule)]
+                                (tagged-words tagged tags)
+                                all)
+                              rule))))))
+
 (defn make-words
   ([]
    (make-words (-> "words.json"
@@ -54,4 +62,6 @@
                    clojure.java.io/reader
                    cheshire/parse-stream)))
   ([word-vecs]
-   (reduce add-word (map->Words {:all #{} :tagged {}}) word-vecs)))
+   (let [words (reduce add-word (map->Words {:all #{} :tagged {}})
+                       word-vecs)]
+     (assoc words :cache (make-cache words)))))
