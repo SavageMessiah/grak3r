@@ -1,3 +1,5 @@
 # TODO
 * alliterative transform
-* https://github.com/simplenlg/simplenlg
+* direct usage of morphology
+* more parts for nlg
+* schema/spec for selectors
