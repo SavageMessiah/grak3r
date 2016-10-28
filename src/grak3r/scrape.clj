@@ -3,7 +3,7 @@
             [grak3r.graker :as grake]
             [grak3r.words :as words]
             [jsoup.soup :as soup])
-  (:import [com.google.common.cache CacheBuilder CacheLoader]
+  (:import [com.google.common.cache CacheBuilder CacheLoader LoadingCache]
            [java.util.concurrent TimeUnit]))
 
 (defn fetch-url [url]
@@ -17,7 +17,7 @@
                   (set (soup/text (soup/select selector page)))))]
     (words/find-words words rule)))
 
-(defrecord Scraper [cache fetch-fn]
+(defrecord Scraper [^LoadingCache cache fetch-fn]
   grake/Module
   (handle-grake [self env {:keys [type url selector] :as rule}]
     (when (and (map? rule)

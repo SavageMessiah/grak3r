@@ -4,7 +4,7 @@
             [clojure.string :as str]
             [cheshire.core :as cheshire]
             [grak3r.graker :as grake])
-  (:import [com.google.common.cache CacheBuilder CacheLoader]))
+  (:import [com.google.common.cache CacheBuilder CacheLoader LoadingCache]))
 
 (defn my-keyword? [k tagged]
   (and (= "word" (namespace k))
@@ -25,7 +25,7 @@
                                    (str/ends-with? word ends-with)))]
                 word))))
 
-(defrecord Words [all tagged cache]
+(defrecord Words [all tagged ^LoadingCache cache]
   grake/Module
   (handle-grake [self env rule]
     (cond (and (keyword? rule)
