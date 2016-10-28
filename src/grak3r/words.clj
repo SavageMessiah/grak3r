@@ -1,5 +1,6 @@
 (ns grak3r.words
   (:require [clojure.java.io :as io]
+            [clojure.set :as set]
             [clojure.string :as str]
             [cheshire.core :as cheshire]
             [grak3r.graker :as grake]))
@@ -9,8 +10,7 @@
        (get tagged (name k))))
 
 (defn tagged-words [tagged tags]
-  (into #{} (for [tag tags]
-              (get tagged tag))))
+  (apply set/intersection (vals (select-keys tagged tags))))
 
 (defn find-words [words {:keys [matches begins-with ends-with]}]
   (if-not (or matches begins-with ends-with)
@@ -47,9 +47,11 @@
       (update :all conj (first word-vec))
       (update :tagged tag-word (first word-vec) (rest word-vec))))
 
-(defn make-words []
-  (let [word-vecs (-> "words.json"
-                      clojure.java.io/resource
-                      clojure.java.io/reader
-                      cheshire/parse-stream)]
-    (reduce add-word (map->Words {:all #{} :tagged {}}) word-vecs)))
+(defn make-words
+  ([]
+   (make-words (-> "words.json"
+                   clojure.java.io/resource
+                   clojure.java.io/reader
+                   cheshire/parse-stream)))
+  ([word-vecs]
+   (reduce add-word (map->Words {:all #{} :tagged {}}) word-vecs)))
