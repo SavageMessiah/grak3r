@@ -5,4 +5,5 @@
             :url "http://www.eclipse.org/legal/epl-v10.html"}
   :dependencies [[org.clojure/clojure "1.8.0"]
                  [com.google.guava/guava "19.0"]
+                 [clj-soup/clojure-soup "0.1.3"]
                  [cheshire "5.6.3"]])
