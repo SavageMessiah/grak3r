@@ -1,4 +1,4 @@
-(defproject grak3r "0.1.0-SNAPSHOT"
+(defproject grak3r "0.2.0-SNAPSHOT"
   :description "Reverse mad-libs, yo!"
   :url "http://github.com/SavageMessiah/grak3r"
   :license {:name "Eclipse Public License"
