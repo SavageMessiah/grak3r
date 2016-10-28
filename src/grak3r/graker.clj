@@ -5,7 +5,7 @@
 (defprotocol Rule
   (grake [self env]))
 
-(defn rand-int [{:keys [^Random rand]} limit]
+(defn grand-int [{:keys [^Random rand]} limit]
   (.nextInt rand limit))
 
 (defprotocol Module
@@ -39,7 +39,7 @@
     (if (empty? self)
       ""
       (let [choice-vec (vec self)
-            choice (get choice-vec (rand-int env (count choice-vec)))]
+            choice (get choice-vec (grand-int env (count choice-vec)))]
         (grake choice env))))
   clojure.lang.IPersistentMap
   (grake [self env]

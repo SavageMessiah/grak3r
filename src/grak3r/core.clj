@@ -14,8 +14,11 @@
 (def default-builtins
   {'+ (fn [env args]
         (apply str (map #(graker/grake % env) args)))
+   '- (fn [env [rule regex]]
+        (let [w (graker/grake rule env)]
+          (str/replace w regex "")))
    '? (fn [env args]
-        (if (= 0 (graker/rand-int env 2))
+        (if (= 0 (graker/grand-int env 2))
           ""
           (graker/grake (first args) env)))
    'cap (lift-fun str/capitalize)
@@ -23,9 +26,11 @@
    'case/up (lift-fun str/upper-case)
    'case/down (lift-fun str/lower-case)})
 
-(def default-rules '{:cool-story ["Cool" 
-                                  (+ "br" {:type :word :tagged #{"adjective"} :begins-with "o"}) 
-                                  (+ "br" {:type :word :tagged #{"noun"} :begins-with "o"} ",") 
+(def default-rules '{:cool-story ["Cool"
+                                  (+ "br" (- {:type :word :tagged #{"adjective"} :matches #"^(o|\wo)"}
+                                             #"^[^o]"))
+                                  (+ "br" (- {:type :word :tagged #{"noun"} :matches #"^(o|\wo)"}
+                                             #"^[^o]") ",")
                                   "Bro!"]
                      :insult/your-face ["Your face is like a" :word/adjective "butt that poops" (+ :word/noun "s") :word/adverb]
                      :bal-sagoth-team-name ["Team" #{["ScoutPrime"
