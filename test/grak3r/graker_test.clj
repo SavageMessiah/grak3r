@@ -2,11 +2,10 @@
   (:require[clojure.test :refer :all]
            [grak3r.graker :as g]))
 
-(def test-graker {:modules [(reify g/Module
-                              (handle-grake [_ _ _] "test-module"))]
-                  :builtins {'test (fn [_ _] "test-builtin")}
-                  :seed 1
-                  :rand (java.util.Random. 1)})
+(def test-graker (g/new-graker {:modules [(reify g/Module
+                                            (handle-grake [_ _ _] "test-module"))]
+                                :builtins {'test (fn [_ _] "test-builtin")}
+                                :seed 1}))
 
 (deftest test-basics
   (are [g e] (= e (g/grake g test-graker))

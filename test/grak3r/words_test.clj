@@ -10,13 +10,8 @@
                                     ["fat" "adjective"]
                                     ["kick" "verb"]]))
 
-(def test-graker {:modules [test-module]
-                  :builtins {}
-                  :seed 1
-                  :rand (java.util.Random. 1)})
-
 (deftest test-words
-  (are [r e] (= e (graker/handle-grake test-module test-graker r))
+  (are [r e] (= e (graker/handle-grake test-module nil r))
     :word/noun
     #{"cat" "hat" "cop"}
 

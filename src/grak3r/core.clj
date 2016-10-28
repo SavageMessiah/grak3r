@@ -54,15 +54,11 @@
                                                       (cap :word/adjective)
                                                       "ScoutPrime"]}]})
 
-(defn new-graker
-  ([] (new-graker (System/currentTimeMillis)))
-  ([seed]
-   {:modules [(scrape/make-scraper)
-              (words/make-words)
-              (rules/make-rules default-rules)]
-    :builtins default-builtins
-    :seed seed
-    :rand (Random. seed)}))
+(defn new-graker []
+  (graker/new-graker {:modules [(scrape/make-scraper)
+                                (words/make-words)
+                                (rules/make-rules default-rules)]
+                      :builtins default-builtins}))
 
 (defn grake
   ([rule] (grake (new-graker) rule 10))

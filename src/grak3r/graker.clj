@@ -50,3 +50,13 @@
       (grake (builtin env (rest self)) env)
       (throw (ex-info "Invalid builtin" {:builtin (first self)
                                          :params (rest self)})))))
+
+(defn new-graker
+  [{:keys [seed modules builtins]
+    :or {modules []
+         builtins {}
+         seed (System/currentTimeMillis)}}]
+  {:modules modules
+   :builtins builtins
+   :seed seed
+   :rand (Random. seed)})
