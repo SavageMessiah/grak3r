@@ -4,7 +4,8 @@
             [grak3r.graker :as graker]
             [grak3r.scrape :as scrape]
             [grak3r.words :as words]
-            [grak3r.rules :as rules])
+            [grak3r.rules :as rules]
+            [grak3r.nlg :as nlg])
   (:import [java.util Random]))
 
 (defn lift-fun [fun]
@@ -56,6 +57,7 @@
 
 (defn new-graker []
   (graker/new-graker {:modules [(scrape/make-scraper)
+                                (nlg/make-nlg)
                                 (words/make-words)
                                 (rules/make-rules default-rules)]
                       :builtins default-builtins}))
