@@ -24,7 +24,8 @@
           (.setSubject spec (fix_ (grake/grake subject env))))
         (when object
           (.setObject spec (fix_ (grake/grake object env))))
-        (.setVerb spec (fix_ (grake/grake verb env)))
+        (when verb
+          (.setVerb spec (fix_ (grake/grake verb env))))
         (.setFeature spec Feature/PROGRESSIVE (boolean progressive))
         (when interrogative
           (.setFeature spec Feature/INTERROGATIVE_TYPE
