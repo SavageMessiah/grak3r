@@ -25,7 +25,7 @@
         (.append sb fg))
       (doseq [g rg]
         (when-not (or (empty? g)
-                      (re-matches #"^\p{P}" g))
+                      (re-matches #"^\p{P}.*" g))
           (.append sb " "))
         (.append sb g))
       (.toString sb)))
